@@ -1,35 +1,38 @@
 # Document Summary Assistant
 
-A technical assessment project for uploading PDFs or scanned images, extracting readable text, and generating AI-powered smart summaries with key points and improvement suggestions.
+A document summarization application that allows users to upload PDFs or scanned images, extract their text, and generate AI-powered summaries along with important insights and suggestions.
 
 ## Features
-
-- Drag-and-drop and file picker upload for PDF and image files.
-- PDF text extraction with Mozilla PDF.js.
-- OCR for scanned images with Tesseract.js.
-- Short, medium, and long summary options.
-- AI-powered smart overview with document type detection.
-- Key point, main theme, and action item extraction.
-- Document improvement suggestions.
-- Editable extracted text before regenerating a summary.
-- Loading states, validation, and basic error handling.
-- Responsive layout for desktop and mobile.
+-   Upload PDF and image files using drag-and-drop or a file picker.
+-   Extract text from PDFs using Mozilla PDF.js.
+-   Extract text from scanned documents using Tesseract.js OCR.
+-   Generate short, medium, or detailed summaries.
+-   Create AI-powered document overviews with automatic document type identification.
+-   Identify key points, central themes, and action items.
+-   Provide suggestions for improving the document.
+-   Review and edit extracted text before generating a summary.
+-   Includes loading indicators, input validation, and basic error handling.
+-   Responsive interface that works across desktop and mobile devices.
 
 ## Tech Stack
+-   HTML, CSS, and JavaScript
+-   PDF.js for PDF text extraction
+-   Tesseract.js for OCR-based image text recognition
+-   Vercel Serverless Functions for backend API handling
+-   Gemini API for AI-powered document summarization
 
-- HTML, CSS, and JavaScript
-- PDF.js for browser PDF parsing
-- Tesseract.js for browser OCR
-- Vercel Serverless Function for secure AI summary generation
-- Gemini API for smart summaries
+## How It Works
 
-## Approach
+The application processes documents directly in the browser. PDF files are handled using PDF.js, while scanned images are converted into readable text through Tesseract.js OCR.
 
-PDF files are parsed in the browser with PDF.js, while scanned images are processed with Tesseract.js OCR. The extracted text can be reviewed and edited before summarization. For smart summaries, the frontend sends only the extracted text to a Vercel serverless API route, where the Gemini API key is kept securely as an environment variable. Gemini returns structured JSON containing an overview, key points, themes, action items, and improvement suggestions, which the frontend renders directly. This approach balances practical document processing, secure API usage, deployment simplicity, and a clean UX.
+After extraction, users can review and modify the text before requesting a summary. The extracted content is then sent to a Vercel Serverless Function rather than directly exposing the API credentials in the browser.
+
+The serverless function securely accesses the Gemini API using an environment variable containing the API key. Gemini processes the document and returns structured information such as an overview, key points, main themes, action items, and improvement suggestions. The frontend then displays these results in an organized format.
+
+This architecture provides a simple deployment process while maintaining secure API-key handling and a user-friendly document summarization workflow.
 
 ## Notes
-
-- OCR accuracy depends on scan quality and language. This version is configured for English.
-- Very large files are limited to 20 MB for browser performance.
-- On Gemini's free tier, submitted content may be used according to Google's free-tier data policy.
-- Since summarization relies entirely on the Gemini API, a valid `GEMINI_API_KEY` is required for the summary feature to work.
+-   OCR results depend on the quality and clarity of the scanned document. The current implementation is configured   for English.
+-   Documents larger than 20 MB are restricted to maintain reasonable browser performance.
+-   Content submitted through Gemini's free tier is subject to Google's applicable free-ti-er data usage policies.
+-   A valid GEMINI_API_KEY must be configured for the AI summarization functionality to work.
