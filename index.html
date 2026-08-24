@@ -3,129 +3,309 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <meta
       name="description"
-      content="Document Summary Assistant extracts text from PDFs and images, then generates smart summaries, key points, and improvement suggestions."
+      content="DocuSense transforms PDFs and scanned documents into concise AI-powered insights, key findings, themes, and actionable recommendations."
     />
-    <title>Document Summary Assistant</title>
+
+    <meta name="theme-color" content="#a67c35" />
+
+    <title>DocuSense — Intelligent Document Insights</title>
+
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+
     <link rel="stylesheet" href="styles.css" />
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"
+    ></script>
+
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"
+    ></script>
+
     <script defer src="app.js"></script>
   </head>
+
   <body>
     <main class="app-shell">
-      <section class="workspace" aria-label="Document Summary Assistant">
-        <aside class="upload-pane">
-          <div class="brand">
-            <div class="brand-mark" aria-hidden="true">DS</div>
-            <div>
-              <h1>Document Summary Assistant</h1>
-              <p>Upload a PDF or scanned image to extract text and generate a focused summary.</p>
-            </div>
-          </div>
+      <section
+        class="workspace"
+        aria-label="DocuSense document intelligence workspace"
+      >
 
-          <label id="dropZone" class="drop-zone" for="fileInput">
+        <aside class="upload-pane">
+          <header class="brand">
+            <div
+              class="brand-mark"
+              aria-hidden="true"
+            >
+              DS
+            </div>
+
+            <div>
+              <h1>DocuSense</h1>
+
+              <p>
+                Turn lengthy documents into clear,
+                useful insights in seconds.
+              </p>
+            </div>
+          </header>
+
+          <label
+            id="dropZone"
+            class="drop-zone"
+            for="fileInput"
+          >
             <input
               id="fileInput"
               type="file"
               accept=".pdf,application/pdf,image/png,image/jpeg,image/webp,image/bmp,image/tiff"
             />
-            <span class="upload-icon" aria-hidden="true">+</span>
-            <strong>Drop document here</strong>
-            <span>or choose PDF, PNG, JPG, WebP, BMP, or TIFF</span>
+
+            <span
+              class="upload-icon"
+              aria-hidden="true"
+            >
+              +
+            </span>
+
+            <strong>
+              Add your document
+            </strong>
+
+            <span>
+              Drag and drop a file here or browse your device
+            </span>
+
+            <span>
+              PDF · PNG · JPG · WebP · BMP · TIFF
+            </span>
           </label>
 
           <div class="controls">
             <fieldset>
-              <legend>Summary length</legend>
-              <div class="segmented-control" role="radiogroup" aria-label="Summary length">
+              <legend>
+                Choose summary depth
+              </legend>
+
+              <div
+                class="segmented-control"
+                role="radiogroup"
+                aria-label="Choose summary depth"
+              >
                 <label>
-                  <input type="radio" name="summaryLength" value="short" checked />
-                  <span>Short</span>
+                  <input
+                    type="radio"
+                    name="summaryLength"
+                    value="short"
+                    checked
+                  />
+
+                  <span>
+                    Brief
+                  </span>
                 </label>
+
                 <label>
-                  <input type="radio" name="summaryLength" value="medium" />
-                  <span>Medium</span>
+                  <input
+                    type="radio"
+                    name="summaryLength"
+                    value="medium"
+                  />
+
+                  <span>
+                    Standard
+                  </span>
                 </label>
+
                 <label>
-                  <input type="radio" name="summaryLength" value="long" />
-                  <span>Long</span>
+                  <input
+                    type="radio"
+                    name="summaryLength"
+                    value="long"
+                  />
+
+                  <span>
+                    Detailed
+                  </span>
                 </label>
               </div>
             </fieldset>
 
-            <button id="summarizeButton" class="primary-button" type="button" disabled>
-              Generate summary
+            <button
+              id="summarizeButton"
+              class="primary-button"
+              type="button"
+              disabled
+            >
+              Analyze document
             </button>
           </div>
 
-          <div id="fileMeta" class="file-meta" hidden></div>
-          <div id="statusBox" class="status-box" role="status" aria-live="polite" hidden></div>
-          <div id="errorBox" class="error-box" role="alert" hidden></div>
+          <div
+            id="fileMeta"
+            class="file-meta"
+            hidden
+          ></div>
+
+          <div
+            id="statusBox"
+            class="status-box"
+            role="status"
+            aria-live="polite"
+            hidden
+          ></div>
+
+          <div
+            id="errorBox"
+            class="error-box"
+            role="alert"
+            hidden
+          ></div>
         </aside>
 
         <section class="result-pane">
-          <div class="tabs" role="tablist" aria-label="Document views">
-            <button class="tab is-active" type="button" data-target="summaryPanel" role="tab">
-              Summary
+          <nav
+            class="tabs"
+            role="tablist"
+            aria-label="Document information"
+          >
+            <button
+              class="tab is-active"
+              type="button"
+              data-target="summaryPanel"
+              role="tab"
+            >
+              Insights
             </button>
-            <button class="tab" type="button" data-target="textPanel" role="tab">Extracted text</button>
-          </div>
 
-          <section id="summaryPanel" class="panel is-active" role="tabpanel">
-            <div id="emptyState" class="empty-state">
-              <h2>Ready for your document</h2>
-              <p>The summary, key points, and improvement suggestions will appear here.</p>
+            <button
+              class="tab"
+              type="button"
+              data-target="textPanel"
+              role="tab"
+            >
+              Source text
+            </button>
+          </nav>
+
+          <section
+            id="summaryPanel"
+            class="panel is-active"
+            role="tabpanel"
+          >
+            <div
+              id="emptyState"
+              class="empty-state"
+            >
+              <h2>
+                Your insights will appear here
+              </h2>
+
+              <p>
+                Upload a document to uncover its
+                main ideas, important findings,
+                themes, actions, and areas for improvement.
+              </p>
             </div>
 
-            <div id="summaryContent" class="summary-content" hidden>
+            <div
+              id="summaryContent"
+              class="summary-content"
+              hidden
+            >
               <div class="summary-header">
                 <div>
-                  <p class="eyebrow">Smart summary</p>
-                  <h2 id="documentTitle">Untitled document</h2>
+                  <p class="eyebrow">
+                    Document intelligence
+                  </p>
+
+                  <h2 id="documentTitle">
+                    Untitled document
+                  </h2>
                 </div>
-                <button id="copySummaryButton" class="secondary-button" type="button">Copy summary</button>
+
+                <button
+                  id="copySummaryButton"
+                  class="secondary-button"
+                  type="button"
+                >
+                  Copy insights
+                </button>
               </div>
 
               <article class="summary-block">
-                <h3>Overview</h3>
+                <h3>
+                  Executive overview
+                </h3>
+
                 <p id="summaryText"></p>
               </article>
 
               <article class="summary-block">
-                <h3>Key points</h3>
+                <h3>
+                  Key findings
+                </h3>
+
                 <ul id="keyPointsList"></ul>
               </article>
 
               <article class="summary-block">
-                <h3>Main themes</h3>
+                <h3>
+                  Core themes
+                </h3>
+
                 <ul id="themesList"></ul>
               </article>
 
               <article class="summary-block">
-                <h3>Action items</h3>
+                <h3>
+                  Recommended actions
+                </h3>
+
                 <ul id="actionsList"></ul>
               </article>
 
               <article class="summary-block">
-                <h3>Improvement suggestions</h3>
+                <h3>
+                  Opportunities to improve
+                </h3>
+
                 <ul id="suggestionsList"></ul>
               </article>
             </div>
           </section>
 
-          <section id="textPanel" class="panel" role="tabpanel">
+          <section
+            id="textPanel"
+            class="panel"
+            role="tabpanel"
+          >
             <div class="text-toolbar">
-              <p id="textStats">No text extracted yet.</p>
-              <button id="copyTextButton" class="secondary-button" type="button" disabled>Copy text</button>
+              <p id="textStats">
+                No source text available yet.
+              </p>
+
+              <button
+                id="copyTextButton"
+                class="secondary-button"
+                type="button"
+                disabled
+              >
+                Copy source text
+              </button>
             </div>
+
             <textarea
               id="extractedText"
               spellcheck="false"
-              placeholder="Extracted document text will appear here. You can edit it before regenerating the summary."
+              placeholder="Once your document is processed, its extracted text will appear here. You can review or edit it before generating new insights."
             ></textarea>
           </section>
         </section>
